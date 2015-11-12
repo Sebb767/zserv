@@ -43,6 +43,7 @@ Valid directives are:
 - ``nozip`` disable zip download.
 - ``nozipi`` if a parent directory is downloaded, exclude this directory from the archive. _The directory may still be downloaded as zip._
 - ``priv`` do not allow access to this directory. Will also exclude it from zip downloads of parent directories.
+- ``nodot`` hide (_not forbid_) all directories starting with a dot.
 - ~~``nosym`` don't follow symlinks.~~ Implementation delayed.
 
 Planned features
