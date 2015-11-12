@@ -1,4 +1,5 @@
 ﻿using System;
+using zserv;
 
 namespace zserv.filesytem
 {
@@ -14,7 +15,7 @@ namespace zserv.filesytem
 		public string name {
 			get;
 			private set;
-		}
+		} = "";
 
 		/// <summary>
 		/// Whether the directive is enforced (non-overwriteable).
@@ -23,7 +24,7 @@ namespace zserv.filesytem
 		public bool enforced {
 			get;
 			private set;
-		}
+		} = false;
 
 		/// <summary>
 		/// Whether this directive is applicable for subdirectories.
@@ -32,7 +33,16 @@ namespace zserv.filesytem
 		public bool recursive {
 			get;
 			private set;
-		}
+		} = false;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="zserv.filesytem.Directive"/> is enabled.
+		/// </summary>
+		/// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
+		public bool enabled {
+			get;
+			private set;
+		} = true;
 
 		public Directive (string name, bool enforced, bool recursive)
 		{
@@ -45,8 +55,45 @@ namespace zserv.filesytem
 		{
 			/* At first we need to filter the prefix. */
 			if(bare.Length < 1)
-				throw new UnknownDirectiveException("The directive %s is invalid.");
+				throw new UnknownDirectiveException("The directive %s is invalid.".incorporate(bare));
+
+			bool hasPrefix = false;
+
+			switch (bare[0]) // check the prefix
+			{
+			case '!':
+				enforced = true;
+				goto case '+';
+			case '+':
+				recursive = true;
+				hasPrefix = true;
+			case '-': 
+				enabled = false;
+				hasPrefix = true;
+				break;
+			}
+
+			if (hasPrefix) // strip prefix
+				this.name = name.Substring (1);
+			else
+				this.name = name;
+		}
+
+		public static override bool Equals(Directive a, Directive b)
+		{
+			return a == b;
+		}
+
+		public static bool operator ==(Directive a, Directive b)
+		{
+			return a.name == b.name;
+		}
+
+		public static bool operator !=(Directive a, Directive b)
+		{
+			return a.name != b.name;
 		}
 	}
 }
+
 
