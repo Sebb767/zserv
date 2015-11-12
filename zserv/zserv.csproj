@@ -39,6 +39,7 @@
     <Compile Include="FileSystem\Directive.cs" />
     <Compile Include="FileSystem\Exceptions.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="FileSystem\DirectiveList.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
