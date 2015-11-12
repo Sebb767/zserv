@@ -31,7 +31,7 @@ zserv uses a directive-based configuration system. You can either specify them g
 /store	nodot,+nosym
 ```
 
-In this example, zip downloading is disabled for ``/`` and ``/mydata`` is not accesible. ``/store`` will forbid all folders starting with a dot and symlinks in it and all of its subdirectories will be ignored.
+In this example, zip downloading is disabled for ``/`` and ``/mydata`` is not accesible. ``/store`` will forbid all folders starting with a dot and symlinks in it and all of its subdirectories will be ignored. Note that wildcars `*` are possible at the end of a string, but every directory specification _must_ start with a `/` (relative paths to the above one may be implemented at a later time).
 
 Valid prefixes are:
 - ``[none]`` The directive will be valid for the specified directory.
