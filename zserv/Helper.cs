@@ -60,6 +60,15 @@ namespace zserv
 
 			return i;
 		}
+
+		/// <summary>
+		/// Returns whether a given string is null or empty.
+		/// </summary>
+		/// <param name="self">The string to check.</param>
+		public static bool Empty(this string self)
+		{
+			return String.IsNullOrEmpty (self);
+		}
 	}
 }
 
