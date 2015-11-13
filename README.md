@@ -25,13 +25,15 @@ Configuration
 zserv uses a directive-based configuration system. You can either specify them globally via the _-o_ command line option or with a config file (specify it via _-c file_). A directive usually looks like this:
 
 ```
-<path>	[prefix]<option>,[prefix]<option>
-/	nozip
+<path>	[prefix]<option>,[prefix]<option> [comment ...]
+/	nozip 	some very useful comment
 /mydata	!priv
 /store	nodot,+nosym
 ```
 
-In this example, zip downloading is disabled for ``/`` and ``/mydata`` is not accesible. ``/store`` will forbid all folders starting with a dot and symlinks in it and all of its subdirectories will be ignored. Note that wildcars `*` are possible at the end of a string, but every directory specification _must_ start with a `/` (relative paths to the above one may be implemented at a later time).
+In this example, zip downloading is disabled for ``/`` and ``/mydata`` is not accesible. ``/store`` will forbid all folders starting with a dot and symlinks in it and all of its subdirectories will be ignored. Note that wildcars `*` are possible at the end of a string, but every directory specification _must_ start with a `/` (relative paths to the above one may be implemented at a later time). 
+
+Paths and directives may be space- or tab-separated; anything after a second tab or space is treated as a comment (= ignored). Paths which contain a slash must be quoted, quoting for paths without spaces is optional. Directives must not contain spaces.
 
 Valid prefixes are:
 - ``[none]`` The directive will be valid for the specified directory.
