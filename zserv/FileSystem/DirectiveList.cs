@@ -17,12 +17,18 @@ namespace zserv.filesytem
 		{
 			foreach (Directive d in directives)
 				Add (d);
+			
+		}
+
+		public DirectiveList(DirectiveParser presets, string path)
+		{
+			throw new NotImplementedException ();
 		}
 
 		public void Add(Directive d)
 		{
 			if(IsDirectiveSet(d.name))			
-				throw new DirectiveAlreadySetException (i.name);
+				throw new DirectiveAlreadySetException (d.name);
 
 			directives.Add (d);
 		}

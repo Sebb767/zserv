@@ -39,5 +39,14 @@ namespace zserv.filesytem
 			this.name = name;
 		}
 	}
+
+	/// <summary>
+	/// Malformed line in dir config.
+	/// </summary>
+	public class MalformedDirectiveException : FileSystemException 
+	{
+		public MalformedDirectiveException (string line, string details) 
+			: base("The config line `%s` is malformed: %s.".incorporate(line, details)) {}
+	}
 }
 

@@ -86,7 +86,99 @@ namespace zserv.filesytem
 			} // end foreach line
 		}
 
+		public static List<Tuple<string, string>> findMatching(string path)
+		{
+			//from d in directives
+			//	where d.Item1 == 
+		}
 
+		/// <summary>
+		/// Checks whether challenger is matching path.
+		/// </summary>
+		/// <returns><c>true</c>, if they match, <c>false</c> otherwise.</returns>
+		/// <param name="path">The path to match against.</param>
+		/// <param name="challenger">The pattern.</param>
+		public static bool isPathMatching(string path, string challenger)
+		{
+			string[] pathParts = path.Split ('/'),
+				challengerParts = path.Split ('/');
+
+			for (int i = 0; i < challengerParts.Length; i++) {
+				if (pathParts.Length == i) // if the challenger is longer, no macht is possible
+					return false;
+
+				if (!dirNameMatching (pathParts [i], challengerParts [i]))
+					return false;
+			}
+
+
+			return true;
+		}
+
+		/// <summary>
+		/// Checks if the directory or file $name matches $challenger.
+		/// This function supports wildcards (*), which may be placeholder for any character or nothing.
+		/// </summary>
+		/// <returns><c>true</c>, if name matches challenger, <c>false</c> otherwise.</returns>
+		/// <param name="name">Name.</param>
+		/// <param name="challenger">Challenger.</param>
+		public static bool dirNameMatching(string name, string challenger)
+		{
+			if (name.Contains ("/") || challenger.Contains ("/"))
+				throw new ArgumentException ("Directory or file name may not contain a slash!");
+
+			if (challenger.Contains ('*')) { // wildcard
+				if (challenger.Replace ("*", "").Length == 0)
+					return true; // wildcard-only string
+
+				// filter all parts which need to match
+				// add slashes (can't be contained) to filter start/end
+				string[] matchP = ("/" + challenger + "/").Split("*");
+
+				foreach(string match in matchP)
+				{
+					if(match.StartsWith("/")) // start of the string, e.g. *.txt
+					{
+						// strip the leading slash
+						match = match.Substring (1);
+
+						if (match.Length == 0) // wildcard at start (like *.cs)
+							continue;
+
+						// if not (like priv*), the string must start with this phrase
+						if (!name.StartsWith (match))
+							return false;
+
+						// if it starts with it, this part gets removed to not taint further matches
+						name = name.Substring (match.Length);
+					}
+					else if (match.EndsWith("/")) // end of string, e.g. test*
+					{
+						// strip the leading slash
+						match = match.Substring (1);
+
+						if (match.Length == 0) // wildcard the end
+							continue;
+
+						// since we're at the end of the string (no wildcard can be 
+						// after this) the string has to end with the match
+						if (!name.EndsWith (match))
+							return false;
+
+						// theoretically name should be stripped, but we're at the end anyway.
+
+					}
+					else // middle of the string; e.g. priv*2*.data
+					{
+						throw new NotImplementedException ("Wildcards in the middle of a string are currently not supported!");
+					}
+				}
+
+				// if we didn't return by now, they match
+				return true; 
+			} else
+				return name == challenger;
+		}
 	}
 }
 
