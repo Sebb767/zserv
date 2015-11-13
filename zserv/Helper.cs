@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
@@ -68,6 +69,52 @@ namespace zserv
 		public static bool Empty(this string self)
 		{
 			return String.IsNullOrEmpty (self);
+		}
+
+		/// <summary>
+		/// Strips the leading char[s] if the given string starts with one of them or the first char, if none are given.
+		/// </summary>
+		/// <returns>The string without the removed char[s].</returns>
+		/// <param name="chars">The char[s] to remove or none to strip the first char.</param>
+		public static string StripLeadingChar(this string self, params char[] chars)
+		{
+			if (chars.Length == 0)
+				return self.Substring (1);
+
+			int offset = 0;
+			foreach(char c in self)
+			{
+				if (chars.Contains (c))
+					offset++;
+				else
+					break;
+			}
+
+			return self.Substring (offset);
+		}
+
+		/// <summary>
+		/// Strips the trailing char[s] if the given string ends with one of them or the last char, if none are given.
+		/// </summary>
+		/// <returns>The string without the removed char[s].</returns>
+		/// <param name="chars">The char[s] to remove or none to strip the last char.</param>
+		public static string StripTrailingChar(this string self, params char[] chars)
+		{
+			if (chars.Length == 0)
+				return self.Substring (0, self.Length -1);
+
+			int offset = 0;
+
+			var selfChars = self.ToCharArray ().Reverse ();
+			foreach(char c in selfChars)
+			{
+				if (chars.Contains (c))
+					offset++;
+				else
+					break;
+			}
+
+			return self.Substring (0, self.Length - offset);
 		}
 	}
 }
