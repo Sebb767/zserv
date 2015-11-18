@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
@@ -9,7 +10,7 @@ namespace zserv.filesytem
 	/// </summary>
 	public class DirectiveParser
 	{
-		public List<Tuple<string, string>> directives;
+		public readonly List<Tuple<string, string>> directives = new List<Tuple<string, string>>();
 
 		public readonly string[] validDirectives = { "nozip", "nozipi", "priv", "nodot" };
 
@@ -27,9 +28,9 @@ namespace zserv.filesytem
 		{
 			// parse directives line by line.
 			// directives may contain a wildcard (*) at the end.
-			foreach(var line in lines)
+			foreach(var utLine in lines)
 			{
-				line = line.Trim ();
+				string line = utLine.Trim ();
 
 				// at first split directives and path.
 				int separatorIndex = line.IndexOfAny(new char[] {' ', '\t'});
@@ -66,10 +67,11 @@ namespace zserv.filesytem
 
 				foreach (var i in directives) 
 				{
-					if (i.StartsWith (new char[] { '+', '-', '!' })) // strip prefix if any
-						i = i.Substring (1);
+					string self = i;
+					if (self.StartsWith (new char[] { '+', '-', '!' })) // strip prefix if any
+						self = self.Substring (1);
 
-					if (i.Empty ())
+					if (self.Empty ())
 						throw new MalformedDirectiveException (line, "Contains an empty or prefix-only directive");
 
 					// lets ignore invalid directives for now
@@ -81,19 +83,23 @@ namespace zserv.filesytem
 
 				// if we're still here, its probably valid
 				// so add it to the list
-				this.directives.Add (new Tuple<string, string> (path, directives));
+				this.directives.Add (new Tuple<string, string> (path, directiveStr));
 
 			} // end foreach line
 		}
 
-		public static List<Tuple<string, string>> findMatching(string path)
+		public IOrderedEnumerable<Tuple<string, string>> findMatching(string path)
 		{
-			//from d in directives
-			//	where d.Item1 == 
+			return from d in directives
+			where isPathMatching(path, d.Item1)
+			orderby d.Item1.Length ascending
+			select d;
 		}
 
 		/// <summary>
 		/// Checks whether challenger is matching path.
+		/// This function supports wildcards (*), which may be placeholder for any character or nothing.
+		/// Currently, a maximum of a single wildcard per directory is supported.
 		/// </summary>
 		/// <returns><c>true</c>, if they match, <c>false</c> otherwise.</returns>
 		/// <param name="path">The path to match against.</param>
@@ -109,8 +115,9 @@ namespace zserv.filesytem
 
 				if (!dirNameMatching (pathParts [i], challengerParts [i]))
 					return false;
-			}
 
+				// should be ok
+			}
 
 			return true;
 		}
@@ -133,10 +140,11 @@ namespace zserv.filesytem
 
 				// filter all parts which need to match
 				// add slashes (can't be contained) to filter start/end
-				string[] matchP = ("/" + challenger + "/").Split("*");
+				string[] matchP = ("/" + challenger + "/").Split('*');
 
-				foreach(string match in matchP)
+				foreach(string fe in matchP)
 				{
+					string match = fe;
 					if(match.StartsWith("/")) // start of the string, e.g. *.txt
 					{
 						// strip the leading slash

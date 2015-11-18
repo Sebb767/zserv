@@ -44,8 +44,6 @@
     <Compile Include="Helper.cs" />
     <Compile Include="FileSystem\DirectiveList.cs" />
     <Compile Include="FileSystem\Entity.cs" />
-    <Compile Include="FileSystem\File.cs" />
-    <Compile Include="FileSystem\Directory.cs" />
     <Compile Include="FileSystem\DirectiveParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

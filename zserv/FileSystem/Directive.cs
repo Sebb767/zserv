@@ -79,7 +79,7 @@ namespace zserv.filesytem
 				this.name = name;
 		}
 
-		public static override bool Equals(Directive a, Directive b)
+		public static bool Equals(Directive a, Directive b)
 		{
 			return a == b;
 		}

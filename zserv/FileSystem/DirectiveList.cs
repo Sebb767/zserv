@@ -11,7 +11,7 @@ namespace zserv.filesytem
 	public class DirectiveList
 	{
 		private List<Directive> directives = new List<Directive>();
-		private char prefix = null;
+		private char? prefix = null;
 
 		public DirectiveList (params Directive[] directives)
 		{

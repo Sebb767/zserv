@@ -20,17 +20,22 @@ namespace zserv.filesytem
 			get {
 				return System.IO.Directory.Exists (path);
 			}
-			private set;
+			private set { isDir = value; }
 		}
 
-		public Entity (Entity parent, string absolutePath, string relativePath, string directiveString)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="zserv.filesytem.Entity"/> class.
+		/// </summary>
+		/// <param name="parser">A parser for all matching directives.</param>
+		/// <param name="absolutePath">The absolute path to the file/dir.</param>
+		/// <param name="relativePath">Relative path.</param>
+		/// <param name="directiveString">Directive string.</param>
+		public Entity (DirectiveParser parser, string absolutePath, string relativePath, string directiveString)
 		{
-			parent = parent;
-
 			path = absolutePath;
-			relativePath = relativePath;
+			this.relativePath = relativePath;
 
-			//directives = new DirectiveList()
+			// parse permissions
 		}
 
 		public bool IsDirectiveSet(string name)

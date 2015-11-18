@@ -116,6 +116,25 @@ namespace zserv
 
 			return self.Substring (0, self.Length - offset);
 		}
+
+		/// <summary>
+		/// Returns whether a given string starts with one of the given chars.
+		/// </summary>
+		/// <returns><c>true</c>, if the given string starts with one of the chars, <c>false</c> otherwise.</returns>
+		/// <param name="self">The string to test.</param>
+		/// <param name="test">All characters to test for.</param>
+		public static bool StartsWith(this string self, params char[] test)
+		{
+			if (String.IsNullOrEmpty(self))
+				return false;
+
+			foreach (char c in test)
+				if (self [0] == c)
+					return true;
+
+			return false;
+		}
+
 	}
 }
 
