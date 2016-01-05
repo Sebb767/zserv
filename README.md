@@ -5,7 +5,9 @@ A lightweight, threaded file server in C# for serving files and directories.
 
 current version: 0.0.1-dev 
 
-**This server is not fully implemented yet.**
+**This server is not fully implemented yet.
+
+As of 5.1.2016, the server is not being developed further due to lacking time and need on my site.** Open an issue in case you want to use zserv or help developing it further.
 
 Features
 ---
